@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model aircrafts {
+  id                  Int       @id @default(autoincrement())
+  model               String    @db.VarChar(50)
+  manufacturer        String?   @db.VarChar(50)
+  registration_number String    @unique @db.VarChar(30)
+  capacity            Int?
+  created_at          DateTime? @default(now()) @db.Timestamp(6)
+  flights             flights[]
+}
+
+model airports {
+  id                                             Int         @id @default(autoincrement())
+  name                                           String      @db.VarChar(100)
+  code                                           String      @unique @db.VarChar(10)
+  location                                       String?
+  created_at                                     DateTime?   @default(now()) @db.Timestamp(6)
+  flights_flights_arrival_airport_idToairports   flights[]   @relation("flights_arrival_airport_idToairports")
+  flights_flights_departure_airport_idToairports flights[]   @relation("flights_departure_airport_idToairports")
+  incidents                                      incidents[]
+}
+
+model flights {
+  id                                              Int         @id @default(autoincrement())
+  flight_number                                   String      @unique @db.VarChar(20)
+  aircraft_id                                     Int?
+  departure_airport_id                            Int?
+  arrival_airport_id                              Int?
+  scheduled_departure                             DateTime?   @db.Timestamp(6)
+  scheduled_arrival                               DateTime?   @db.Timestamp(6)
+  created_at                                      DateTime?   @default(now()) @db.Timestamp(6)
+  aircrafts                                       aircrafts?  @relation(fields: [aircraft_id], references: [id], onUpdate: NoAction)
+  airports_flights_arrival_airport_idToairports   airports?   @relation("flights_arrival_airport_idToairports", fields: [arrival_airport_id], references: [id], onUpdate: NoAction)
+  airports_flights_departure_airport_idToairports airports?   @relation("flights_departure_airport_idToairports", fields: [departure_airport_id], references: [id], onUpdate: NoAction)
+  incidents                                       incidents[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model incidents {
+  id          Int       @id @default(autoincrement())
+  title       String    @db.VarChar(150)
+  description String?
+  severity    String?   @db.VarChar(20)
+  location    String?
+  airport_id  Int?
+  flight_id   Int?
+  reported_by Int?
+  created_at  DateTime? @default(now()) @db.Timestamp(6)
+  airports    airports? @relation(fields: [airport_id], references: [id], onUpdate: NoAction)
+  flights     flights?  @relation(fields: [flight_id], references: [id], onUpdate: NoAction)
+  users       users?    @relation(fields: [reported_by], references: [id], onUpdate: NoAction)
+  reports     reports[]
+}
+
+model reports {
+  id          Int        @id @default(autoincrement())
+  incident_id Int?
+  content     String
+  author_id   Int?
+  created_at  DateTime?  @default(now()) @db.Timestamp(6)
+  users       users?     @relation(fields: [author_id], references: [id], onUpdate: NoAction)
+  incidents   incidents? @relation(fields: [incident_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model users {
+  id            Int         @id @default(autoincrement())
+  username      String      @unique @db.VarChar(50)
+  email         String      @unique @db.VarChar(100)
+  password_hash String
+  refresh_token String?     @db.VarChar(255)
+  role          String?     @default("user") @db.VarChar(20)
+  created_at    DateTime?   @default(now()) @db.Timestamp(6)
+  incidents     incidents[]
+  reports       reports[]
+}

@@ -1,0 +1,39 @@
+{
+  "type": "module",
+  "name": "timp_lab4",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NeTRUPPER/TIMP_Lab4.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NeTRUPPER/TIMP_Lab4/issues"
+  },
+  "homepage": "https://github.com/NeTRUPPER/TIMP_Lab4#readme",
+  "dependencies": {
+    "@prisma/client": "^6.8.2",
+    "axios": "^1.9.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "react-router-dom": "^7.6.2"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.4.21",
+    "nodemon": "^3.1.10",
+    "postcss": "^8.5.4",
+    "prisma": "^6.8.2",
+    "tailwindcss": "^4.1.8"
+  }
+}
