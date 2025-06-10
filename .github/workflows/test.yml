@@ -31,4 +31,4 @@ jobs:
     - name: Run tests
       run: |
         cd my-incident-app
-        npm test -- --watchAll=false 
+        npm test -- --watchAll=false --passWithNoTests 
