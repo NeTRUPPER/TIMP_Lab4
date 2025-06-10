@@ -38,7 +38,7 @@ export const authenticateToken = async (req, res, next) => {
       }
     } else {
       console.error('Token verification failed:', error);
-      return res.status(401).json({ error: "Неверный токен" });
+    return res.status(401).json({ error: "Неверный токен" });
     }
   }
 };
