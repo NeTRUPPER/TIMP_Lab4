@@ -38,8 +38,8 @@ const LoginPage = () => {
             console.error('Error in login context:', loginError);
             setError(loginError.message || 'Ошибка при входе в систему');
             setLoading(false);
-            return;
-          }
+        return;
+      }
         } else {
           console.error('No user data in response');
           throw new Error('Ошибка при входе: данные пользователя не получены');
@@ -136,7 +136,7 @@ const LoginPage = () => {
                 />
               </div>
             )}
-            <div>
+      <div>
               <label htmlFor="email" className="sr-only">
                 Email
               </label>
@@ -152,8 +152,8 @@ const LoginPage = () => {
                 } focus:outline-none focus:ring-primary-500 focus:border-primary-500 focus:z-10 sm:text-sm`}
                 placeholder="Email"
               />
-            </div>
-            <div>
+      </div>
+      <div>
               <label htmlFor="password" className="sr-only">
                 Пароль
               </label>

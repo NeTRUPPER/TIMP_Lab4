@@ -1,42 +1,39 @@
 import { render, screen } from '@testing-library/react';
-import { BrowserRouter } from 'react-router-dom';
-import { AuthProvider } from '../context/AuthContext';
+import { MemoryRouter } from 'react-router-dom';
 import App from '../App';
 
 // Mock the auth context
 jest.mock('../context/AuthContext', () => ({
   useAuth: () => ({
-    login: jest.fn(),
     user: null,
-    logout: jest.fn()
+    isInitialized: true
   })
 }));
 
-const renderApp = () => {
-  return render(
-    <BrowserRouter>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </BrowserRouter>
-  );
-};
-
 describe('App', () => {
   test('renders login page by default', () => {
-    renderApp();
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
+    
     expect(screen.getByText('Вход в систему')).toBeInTheDocument();
   });
 
   test('renders navigation when user is logged in', () => {
-    // Mock the auth context to return a logged-in user
-    jest.spyOn(require('../context/AuthContext'), 'useAuth').mockImplementation(() => ({
-      login: jest.fn(),
+    // Mock authenticated user
+    jest.spyOn(require('../context/AuthContext'), 'useAuth').mockReturnValue({
       user: { id: 1, email: 'test@example.com' },
-      logout: jest.fn()
-    }));
+      isInitialized: true
+    });
 
-    renderApp();
-    expect(screen.getByText('Инциденты')).toBeInTheDocument();
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>
+    );
+    
+    expect(screen.getByText('Incidents')).toBeInTheDocument();
   });
 }); 

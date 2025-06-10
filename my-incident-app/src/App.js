@@ -27,8 +27,8 @@ const PrivateRoute = ({ children }) => {
 
 const AppRoutes = () => {
   return (
-    <Routes>
-      <Route path="/login" element={<LoginPage />} />
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
       <Route
         path="/"
         element={
@@ -42,7 +42,7 @@ const AppRoutes = () => {
       <Route
         path="/incidents"
         element={
-          <PrivateRoute>
+            <PrivateRoute>
             <Layout>
               <IncidentsPage />
             </Layout>
@@ -56,13 +56,13 @@ const AppRoutes = () => {
             <Layout>
               <IncidentFormPage />
             </Layout>
-          </PrivateRoute>
+            </PrivateRoute>
         }
       />
       <Route
         path="/incidents/:id"
         element={
-          <PrivateRoute>
+            <PrivateRoute>
             <Layout>
               <IncidentDetailsPage />
             </Layout>
@@ -76,10 +76,10 @@ const AppRoutes = () => {
             <Layout>
               <IncidentFormPage />
             </Layout>
-          </PrivateRoute>
+            </PrivateRoute>
         }
       />
-    </Routes>
+        </Routes>
   );
 };
 
@@ -89,7 +89,7 @@ const App = () => {
       <AuthProvider>
         <AppRoutes />
       </AuthProvider>
-    </Router>
+      </Router>
   );
 };
 

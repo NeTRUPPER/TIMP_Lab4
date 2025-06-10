@@ -107,7 +107,7 @@ const IncidentsPage = () => {
   return (
     <div className="card">
       <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-        <div>
+    <div>
           <h3 className="text-lg leading-6 font-medium text-gray-900">Инциденты</h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">Список всех инцидентов</p>
         </div>

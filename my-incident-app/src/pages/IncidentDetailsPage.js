@@ -60,7 +60,7 @@ const IncidentDetailsPage = () => {
 
     try {
       const response = await reportsApi.create({
-        incident_id: id,
+          incident_id: id,
         content: reportContent,
       });
 
@@ -119,7 +119,7 @@ const IncidentDetailsPage = () => {
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
       </div>
     );
-  }
+        }
 
   if (error) {
     return (
@@ -149,7 +149,7 @@ const IncidentDetailsPage = () => {
     <div className="space-y-6">
       <div className="bg-white shadow overflow-hidden sm:rounded-lg">
         <div className="px-4 py-5 sm:px-6 flex justify-between items-center">
-          <div>
+    <div>
             <h3 className="text-lg leading-6 font-medium text-gray-900">
               Детали инцидента
             </h3>
@@ -169,7 +169,7 @@ const IncidentDetailsPage = () => {
               className="btn-danger"
             >
               Удалить
-            </button>
+    </button>
           </div>
         </div>
 
@@ -215,8 +215,8 @@ const IncidentDetailsPage = () => {
                   <div className="flex items-center">
                     <span className="font-medium">{incident.flights.aircrafts.model}</span>
                     <span className="ml-2 text-gray-500">{incident.flights.aircrafts.registration}</span>
-                  </div>
-                ) : (
+  </div>
+) : (
                   'Не указан'
                 )}
               </dd>
@@ -304,7 +304,7 @@ const IncidentDetailsPage = () => {
                   </div>
                 </dd>
               </div>
-            )}
+)}
           </dl>
         </div>
       </div>
@@ -329,16 +329,16 @@ const IncidentDetailsPage = () => {
               <label htmlFor="report" className="block text-sm font-medium text-gray-700">
                 Содержание отчета
               </label>
-              <textarea
+        <textarea
                 id="report"
                 name="report"
-                rows={4}
-                required
+          rows={4}
+          required
                 value={reportContent}
                 onChange={(e) => setReportContent(e.target.value)}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm"
                 placeholder="Введите содержание отчета"
-              />
+        />
             </div>
             <div className="flex justify-end">
               <button
@@ -349,7 +349,7 @@ const IncidentDetailsPage = () => {
                 {reportLoading ? 'Отправка...' : 'Отправить отчет'}
               </button>
             </div>
-          </form>
+      </form>
         </div>
       </div>
 
@@ -359,7 +359,7 @@ const IncidentDetailsPage = () => {
           <div className="px-4 py-5 sm:p-6">
             <h3 className="text-lg font-semibold mb-4">Отчеты</h3>
             <div className="reports-list space-y-4">
-              {incident.reports.map((report) => (
+          {incident.reports.map((report) => (
                 <div key={report.id} className="bg-white rounded-lg shadow p-4">
                   <div className="flex justify-between items-center mb-2">
                     <div className="text-sm text-gray-600">
