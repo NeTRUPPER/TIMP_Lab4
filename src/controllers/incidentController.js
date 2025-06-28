@@ -14,7 +14,12 @@ export const createIncident = async (req, res) => {
     });
 
     if (!flight) {
-      return res.status(404).json({ error: "Рейс не найден" });
+      return res.status(404).json({ 
+        error: {
+          code: 404,
+          message: "Рейс не найден"
+        }
+      });
     }
 
     const incident = await prisma.incidents.create({
@@ -33,7 +38,12 @@ export const createIncident = async (req, res) => {
     res.status(201).json(incident);
   } catch (error) {
     console.error("Ошибка создания инцидента:", error);
-    res.status(500).json({ error: "Ошибка сервера" });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка сервера"
+      }
+    });
   }
 };
 
@@ -51,7 +61,12 @@ export const getAllIncidents = async (req, res) => {
     });
     res.status(200).json(incidents);
   } catch (error) {
-    res.status(500).json({ error: "Ошибка сервера" });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка сервера"
+      }
+    });
   }
 };
 
@@ -91,11 +106,21 @@ export const getIncidentById = async (req, res) => {
       },
     });
 
-    if (!incident) return res.status(404).json({ error: "Инцидент не найден" });
+    if (!incident) return res.status(404).json({ 
+      error: {
+        code: 404,
+        message: "Инцидент не найден"
+      }
+    });
     res.json(incident);
   } catch (error) {
     console.error("Ошибка при получении инцидента:", error);
-    res.status(500).json({ error: "Ошибка сервера" });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка сервера"
+      }
+    });
   }
 };
 
@@ -112,7 +137,12 @@ export const updateIncident = async (req, res) => {
     });
     res.json(updated);
   } catch (error) {
-    res.status(500).json({ error: "Ошибка обновления" });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка обновления"
+      }
+    });
   }
 };
 
@@ -126,7 +156,12 @@ export const deleteIncident = async (req, res) => {
     });
     res.json({ message: "Инцидент удалён" });
   } catch (error) {
-    res.status(500).json({ error: "Ошибка удаления" });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка удаления"
+      }
+    });
   }
 };
 
@@ -149,12 +184,17 @@ export const getIncidents = async (req, res) => {
             email: true,
           }
         },
-        reports: true, // можно добавить количество репортов, если нужно
+        reports: true,
       },
     });
     res.json(incidents);
   } catch (error) {
     console.error('Error fetching incidents:', error);
-    res.status(500).json({ error: 'Ошибка при получении инцидентов' });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка при получении инцидентов"
+      }
+    });
   }
 };

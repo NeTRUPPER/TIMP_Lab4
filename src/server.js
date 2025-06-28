@@ -4,6 +4,7 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 import { authenticateToken } from "./middleware/authMiddleware.js";
+import { logError } from './utils/logger.js';
 
 import incidentRoutes from "./routes/incident.js";
 import authRoutes from "./routes/auth.js";
@@ -46,19 +47,21 @@ app.use("/api/flights", authenticateToken, flightRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {
-  console.error('Error details:', {
-    message: err.message,
-    stack: err.stack,
+  // Логируем ошибку
+  logError(err, {
     path: req.path,
     method: req.method,
-    body: req.body
+    body: req.body,
+    user: req.user,
+    ip: req.ip
   });
   
-  res.status(err.status || 500).json({
-    error: err.message || "Что-то пошло не так!",
-    path: req.path,
-    method: req.method,
-    timestamp: new Date().toISOString()
+  const statusCode = err.status || 500;
+  res.status(statusCode).json({
+    error: {
+      code: statusCode,
+      message: err.message || "Что-то пошло не так!"
+    }
   });
 });
 

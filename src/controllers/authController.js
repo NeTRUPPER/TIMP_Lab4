@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
+import { logError } from '../utils/logger.js';
 
 const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
@@ -22,7 +23,12 @@ export const register = async (req, res) => {
     });
 
     if (existingUser) {
-      return res.status(400).json({ error: "Email уже используется" });
+      return res.status(400).json({ 
+        error: {
+          code: 400,
+          message: "Email уже используется"
+        }
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -37,7 +43,12 @@ export const register = async (req, res) => {
     return res.status(201).json({ message: "Пользователь зарегистрирован", user: { id: user.id, email: user.email } });
   } catch (error) {
     console.error("Ошибка при регистрации:", error);
-    res.status(500).json({ error: "Ошибка сервера" });
+    res.status(500).json({ 
+      error: {
+        code: 500,
+        message: "Ошибка сервера"
+      }
+    });
   }
 };
 
@@ -46,44 +57,49 @@ export const login = async (req, res) => {
 
   if (!email || !password) {
     return res.status(400).json({ 
-      error: "Email и пароль обязательны",
+      error: {
+        code: 400,
+        message: "Email и пароль обязательны"
+      },
       details: { email: !email, password: !password }
     });
   }
 
   try {
-    console.log('Attempting login for email:', email);
-    
     const user = await prisma.users.findUnique({
       where: { email },
     });
 
     if (!user) {
-      console.log('User not found for email:', email);
-      return res.status(401).json({ error: "Неверный email или пароль" });
+      return res.status(401).json({ 
+        error: {
+          code: 401,
+          message: "Неверный email или пароль"
+        }
+      });
     }
 
-    console.log('User found, verifying password');
     const validPassword = await bcrypt.compare(password, user.password_hash);
     
     if (!validPassword) {
-      console.log('Invalid password for user:', email);
-      return res.status(401).json({ error: "Неверный email или пароль" });
+      return res.status(401).json({ 
+        error: {
+          code: 401,
+          message: "Неверный email или пароль"
+        }
+      });
     }
 
-    console.log('Password verified, generating tokens');
     // Создаем access и refresh токены
     const accessToken = jwt.sign({ userId: user.id }, JWT_SECRET, { expiresIn: '1h' });
     const refreshToken = jwt.sign({ userId: user.id }, REFRESH_SECRET, { expiresIn: '7d' });
 
-    console.log('Updating user refresh token');
     // Сохраняем refresh токен в базе
     await prisma.users.update({
       where: { id: user.id },
       data: { refresh_token: refreshToken }
     });
 
-    console.log('Setting cookies');
     // Устанавливаем cookies
     res.cookie('accessToken', accessToken, COOKIE_OPTIONS);
     res.cookie('refreshToken', refreshToken, {
@@ -91,7 +107,6 @@ export const login = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 дней
     });
 
-    console.log('Login successful for user:', email);
     res.json({
       user: {
         id: user.id,
@@ -101,14 +116,12 @@ export const login = async (req, res) => {
       }
     });
   } catch (error) {
-    console.error("Ошибка при входе:", {
-      error: error.message,
-      stack: error.stack,
-      email: email
-    });
+    logError(error, { email });
     res.status(500).json({ 
-      error: "Ошибка сервера",
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      error: {
+        code: 500,
+        message: "Ошибка сервера"
+      }
     });
   }
 };

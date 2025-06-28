@@ -1,4 +1,4 @@
-// src/pages/LoginPage.js
+
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { authApi } from "../api/api";
@@ -111,7 +111,7 @@ const LoginPage = () => {
                       ? 'text-green-700' 
                       : 'text-red-700'
                   }`}>
-                    {error}
+                    <span className="font-medium">{error}</span>
                   </p>
                 </div>
               </div>

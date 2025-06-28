@@ -1,16 +1,14 @@
-// src/api/api.js
-
 import axios from 'axios';
 
 const API_URL = 'http://localhost:4000/api';
 
-// Create axios instance with default config
+
 const api = axios.create({
   baseURL: API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true // Важно для работы с cookies
+  withCredentials: true //  для  cookies
 });
 
 let isRefreshing = false;
@@ -27,7 +25,6 @@ const processQueue = (error, token = null) => {
   failedQueue = [];
 };
 
-// Request interceptor for adding auth token
 api.interceptors.request.use(
   (config) => {
     return config;
@@ -37,7 +34,6 @@ api.interceptors.request.use(
   }
 );
 
-// Response interceptor for handling errors and token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -80,16 +76,15 @@ api.interceptors.response.use(
   }
 );
 
-// Error handling utility
+
 const handleApiError = (error) => {
   console.error('API Error:', error);
 
   if (error.response) {
-    // Server responded with error status
+    
     const { status, data } = error.response;
     const errorMessage = data.error || data.message || 'Произошла ошибка';
     
-    // Log error on server
     console.error(`API Error [${status}]:`, {
       message: errorMessage,
       path: error.config?.url,
@@ -97,29 +92,26 @@ const handleApiError = (error) => {
       timestamp: new Date().toISOString()
     });
 
-    // Return error object with code and message
     return {
       code: status,
-      message: errorMessage
+      message: `${status}: ${errorMessage}`
     };
   } else if (error.request) {
-    // Request made but no response received
+
     console.error('Network Error:', error.request);
     return {
-      code: 'NETWORK_ERROR',
-      message: 'Ошибка сети - проверьте подключение'
+      code: 503,
+      message: '503: Сервис недоступен - проверьте подключение'
     };
   } else {
-    // Error in request configuration
     console.error('Request Error:', error.message);
     return {
-      code: 'REQUEST_ERROR',
-      message: error.message || 'Ошибка конфигурации запроса'
+      code: 400,
+      message: `400: ${error.message || 'Ошибка конфигурации запроса'}`
     };
   }
 };
 
-// API endpoints with error handling
 export const authApi = {
   login: async (credentials) => {
     try {
